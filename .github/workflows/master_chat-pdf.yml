@@ -66,4 +66,4 @@ jobs:
         with:
           app-name: 'CHAT-PDF'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F617CBE0A4784B6BA1AEC7110F8775DD }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F6E2FFC00A494E30ABE60685D1029AC9 }}
