@@ -31,7 +31,8 @@ def get_text_chunks(text):
 def get_vector_store(text_chunks):
     embeddings = GoogleGenerativeAIEmbeddings(model='models/embedding-001')
     vector_store = FAISS.from_texts(text_chunks,embedding=embeddings)
-    vector_store.save_local('tmp/')
+    return vector_store
+    # vector_store.save_local('tmp/')
 
 def get_conversational_chain():
     prompttemplate='''Answer the question as detailed as possible from the provided context, make sure to provide all the details, if the answer is not in
@@ -47,7 +48,7 @@ def get_conversational_chain():
     chain=load_qa_chain(llm=model,chain_type='stuff',prompt=prompt)
     return chain
 
-def user_input(user_question):
+def user_input(user_question,vector_store):
     embeddings = GoogleGenerativeAIEmbeddings(model='models/embedding-001')
 
     new_db=FAISS.load_local('tmp/',embeddings=embeddings,allow_dangerous_deserialization=True)
@@ -65,11 +66,12 @@ def user_input(user_question):
 def main():
     st.set_page_config("Chat PDF")
     st.header("Chat with PDF")
+    vector_store=''
 
     user_question = st.text_input("Ask a Question from the PDF Files")
 
     if user_question:
-        user_input(user_question)
+        user_input(user_question,vector_store)
 
     with st.sidebar:
         st.title("Menu:")
@@ -78,7 +80,7 @@ def main():
             with st.spinner("Processing..."):
                 raw_text = get_pdf_text(pdf_docs)
                 text_chunks = get_text_chunks(raw_text)
-                get_vector_store(text_chunks)
+                vector_store=get_vector_store(text_chunks)
                 st.success("Done")
 
 
